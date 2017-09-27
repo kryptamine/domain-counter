@@ -1,0 +1,25 @@
+{
+    "name": "root/domain-counter",
+    "keywords": ["domain"],
+    "license": "MIT",
+    "description": "get domains from users table",
+    "authors": [
+        {
+            "name": "Alexander Satretdinov",
+            "email": "a.satretdinov@vsemayki.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
