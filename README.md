@@ -3,9 +3,12 @@ Chunks domain counter
 ## Installation ##
 
 ```
-run seeder
+run migration
 php /migration/db.sql
 
+run seeder
+
+php ./src/seeder/Seeder.php
 ```
 
 ## Usage ##
