@@ -10,8 +10,7 @@ $stmt = $db->getInstance()->prepare("INSERT INTO users (name, gender, email) VAL
 function generateEmails()
 {
     $domains = ['bk', 'mail', 'yandex'];
-
-    $result = [];
+    $result  = [];
 
     foreach (range(0, rand(0, 3)) as $number) {
         if ($number == 3) {

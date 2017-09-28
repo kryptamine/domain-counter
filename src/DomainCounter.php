@@ -15,8 +15,6 @@ class DomainCounter
      */
     private $db;
 
-    const LIMIT = 100000;
-
     /**
      * DomainCounter constructor.
      *
@@ -28,18 +26,20 @@ class DomainCounter
     }
 
     /**
+     * @param int $chunkSize
+     *
      * @return array
      */
-    public function calculate() : array
+    public function calculate(int $chunkSize) : array
     {
         $offset = 0;
         $result = [];
 
-        while ($userEmails = $this->getEmails(static::LIMIT + $offset, $offset)) {
+        while ($userEmails = $this->getEmails($chunkSize, $offset)) {
             foreach ($userEmails as $emails) {
                 $emails = explode(',', $emails);
 
-                foreach (array_filter($emails) as $email) {
+                foreach (array_unique(array_filter($emails)) as $email) {
                     list($firstPart, $domain) = explode('@', $email);
 
                     if (!array_key_exists($domain, $result)) {
@@ -50,7 +50,7 @@ class DomainCounter
                 }
             }
 
-            $offset += static::LIMIT;
+            $offset += $chunkSize;
         }
 
         return $result;
@@ -64,6 +64,9 @@ class DomainCounter
      */
     public function getEmails(int $limit, int $offset)
     {
-        return $this->db->getInstance()->query("SELECT id, email FROM users WHERE id >= $offset AND id < $limit")->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $this->db->getInstance()->query("
+            SELECT users.id, users.email FROM users JOIN 
+            (SELECT id FROM users ORDER BY id LIMIT $offset, $limit) as u ON u.id = users.id
+        ")->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }
